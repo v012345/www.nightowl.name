@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+
+    <div id="root">
+        v-show 底层是 style="display: none;"
+        <div v-show="showdiv">{{text}}</div>
+        <div v-show="false">{{text}}</div>
+
+        底层不是知道，反正就是不渲染了，直接在dom增加和去除
+        <div v-if="showdiv">{{text}}</div>
+        <div v-if="false">{{text}}</div>
+
+        <hr>
+        如果一个box的出现频率高，可以使用v-show，因为已经渲染好了
+        <hr>
+        <div>{{n}}</div>
+        <button @click="add">n++</button>
+        如果使用v-else-if v-else 那么这几个不div必须写在一起，不能被打断
+        <div v-if=" n ===1 ">{{n}}</div>
+        <div v-else-if=" n ===2 ">{{n}}</div>
+        <div v-else>{{n}}</div>
+
+        <hr>
+        使用template分组,不影响结构，在渲染时，会把template去掉,
+        template只不能和v-show配合，不起作用
+        <template v-if="n===1">
+            <h2>123</h2>
+            <h2>345</h2>
+            <h2>567</h2>
+        </template>
+        <template v-show="n===1">
+            <h2>098</h2>
+            <h2>890</h2>
+            <h2>890</h2>
+        </template>
+
+    </div>
+    <script>
+        new Vue({
+            el: "#root",
+            data: {
+                text: 123123123,
+                showdiv: true,
+                n: 0
+            },
+            methods: {
+                add() { this.n++ }
+            },
+
+
+        })
+    </script>
+</body>
+
+</html>

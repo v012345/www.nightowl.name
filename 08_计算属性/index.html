@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root1">
+        1.插值实现
+        <div>
+            <input type="text" v-model="f"><br>
+            <input type="text" v-model="l"><br>
+            {{f}}-{{l}}<br>
+            {{f + "-" + l}} <br>
+            {{f.slice(0,1)}}-{{l.slice(0,2)}}
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#root1",
+            data: {
+                f: "",
+                l: ""
+            }
+        })
+    </script>
+
+    <div id="root2">
+        2.methods 实现
+        <div>
+            <input type="text" v-model="f"><br>
+            <input type="text" v-model="l"><br>
+            <input type="text" v-model="t"><br>
+            {{name()}}<br>
+            {{name()}}<br>
+            {{name()}}<br>
+            {{test()}}
+            因为数据发生变化，vue会重新解析一次模板，有方法调用的地方也会调用一次方法
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#root2",
+            data: {
+                f: "",
+                l: "",
+                t: ""
+            },
+            methods: {
+                name() {
+                    console.log("name()2");
+                    return this.f + this.l
+                },
+                test() {
+                    console.log("test2")
+                }
+            }
+        })
+    </script>
+
+    <div id="root3">
+        3.计算属性实现
+        <div>
+            <input type="text" v-model="f"><br>
+            <input type="text" v-model="l"><br>
+            <input type="text" v-model="t"><br>
+            {{name}}-<br>
+            {{name}}-<br>
+            {{name}}-<br>
+            {{name}}-<br>
+            {{test()}}<br>
+            {{fullname}}
+
+        </div>
+    </div>
+    <script>
+        const vm = new Vue({
+            el: "#root3",
+            data: {
+                f: "",
+                l: "",
+                t: ""
+            },
+            methods: {
+                test() {
+                    console.log("test3")
+                }
+            },
+            computed: {
+                name: {
+                    //get()的调用，1.初次读取{{name}}时被调用，之后会被缓存
+                    //2.依赖数据发生变化时调用
+                    get() { console.log("name get()3"); return this.f + this.l },//this指向vm
+                    set(v) { this.l = v }//一般不会写，除非真的有改动的需求
+                },
+                //只要getter,可以简写
+                fullname() {
+                    return this.l + this.f
+                }
+            }
+        })
+        //计算属性：
+        //要用的属性不存在，要通过计算来得到，也可以用到外部的数据，但是外部数据不受vue管理，外部数据变动不会触发getter方法
+        //底层就是Object.defineProperty的setter 和 getter
+
+    </script>
+
+</body>
+
+</html>

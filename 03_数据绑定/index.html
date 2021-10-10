@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 vue</title>
+    <script src="../js/vue.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- vue 容器 -->
+    <div id="app">
+        单向绑定
+        <input type="text" :value="name">
+        <hr>
+        双向绑定
+        <!-- 注意 v-model 中能用于表单类元素,大概就是有value属性的元素,其他的标签不能使用,所以可以简写,因为只收集value嘛 -->
+        <input type="text" v-model:value="no">
+        <input type="text" v-model="no">
+        {{no}}
+    </div>
+    <script>
+        Vue.config.productionTip = false;
+        const v = new Vue({//配置对象
+            el: "#app", //el:document.getElementById("app") 也可用 .app 类选择器, 但是请注意, vue实例和容器只能一一对应,不存在一对多的关系
+            data: {//写组件的时候，可能要写成函数
+                name: "vue",
+                no: "http://www.nightowl.name"
+            }
+        });
+    </script>
+</body>
+
+</html>

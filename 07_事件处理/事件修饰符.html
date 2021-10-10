@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <a href="http://www.nightowl.name" @click="f1">1</a>
+        1.prevent<br>
+        <a href="http://www.nightowl.name" @click.prevent="f1">2</a>
+        <hr>
+        2.stop 阻止事件冒泡
+        <div @click="f2">
+            2
+            <div @click.stop="f3">3</div>
+            <div @click="f3">3</div>
+        </div>
+        3.事件只触发一次
+        <button @click.once="f4">123123123</button>
+        <hr>
+        4.capture 事件捕获 就是捕获阶段就处理事件了
+        <div @click.capture="f2">
+            2
+            <div @click.stop="f3">3</div>
+            <div @click="f3">3</div>
+            <div @click="f5">3</div>
+        </div>
+        <hr>
+        5.self 只有event.target是当前操作的元素时才触发事件
+        <div @click.self="f6"> 1
+            <div @click.self="f6"> 2
+                <div @click.self="f6">3
+                    <div @click.self="f6">4
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div @click="f6"> 1
+            <div @click="f6"> 2
+                <div @click="f6">3
+                    <div @click="f6">4
+                    </div>
+                </div>
+            </div>
+        </div>
+        6.passive 事件的默认行为立即执行，无需等待事件回调执行完毕
+        <div @scroll="f1"> 监听滚动条 </div>
+        <div @wheel="f1"> 监听鼠标滚轮 </div>
+        如果事件回调有执行时间长可以加上
+        <div @wheel.passive="f1"> 监听鼠标滚轮 </div>
+        先滚动，再慢慢执行f1()
+    </div>
+    <script>
+
+        new Vue({
+            el: "#root",
+            data: {},
+            methods: {
+                f1(e) {
+                    e.preventDefault();
+                    console.log(e)
+                },
+                f2(e) {
+
+                    console.log(2)
+                },
+                f3(e) {
+                    e.stopPropagation()
+                    console.log(3)
+                },
+                f5(e) {
+                    console.log(5)
+                },
+                f6(e) {
+                    console.log(e.target)
+                },
+                f4() { alert(123) }
+            }
+        })
+    </script>
+</body>
+
+</html>

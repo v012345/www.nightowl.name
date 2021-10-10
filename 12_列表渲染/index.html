@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <ul>
+            <li v-for="user in users" :key="user.id">user:{{user.name}} - age:{{user.age}}</li>
+        </ul>
+        <hr>
+        <ul>
+            <li v-for="(user,index) in users" :key="index">Value:{{user}} - index:{{index}}</li>
+        </ul>
+        <hr>
+        <ul>
+            这么写习惯不好 还是加个括号吧
+            <li v-for="user,index in users" :key="index">Value:{{user}} - index:{{index}}</li>
+        </ul>
+        <hr>
+        <ul>
+            历史遗留问题，使用of也行，不知道之后会不会改
+            <li v-for="(user,index) of users" :key="index">Value:{{user}} - index:{{index}}</li>
+        </ul>
+        <hr>
+        <ul>
+            遍历对象
+            <li v-for="(value,key,index) of person" :key="index">value:{{value}} - key:{{key}}--index:{{index}}</li>
+            <li v-for="(value,key,index) in person" :key="index+3">value:{{value}} - key:{{key}}--index:{{index}}</li>
+        </ul>
+        <hr>
+        <ul>
+            遍历字符串
+            <li v-for="(value,index) in str" :key="index">value:{{value}}--index:{{index}}</li>
+        </ul>
+        <hr>
+        <ul>
+            遍历指定次数
+            <li v-for="(value,index) in 10" :key="index">value:{{value}}--index:{{index}}</li>
+        </ul>
+    </div>
+    <script>
+        new Vue({
+            el: "#root",
+            data: {
+                users: [
+                    { id: 1, name: "111", age: 19 },
+                    { id: 2, name: "222", age: 18 },
+                    { id: 3, name: "333", age: 20 }
+                ],
+                person: {
+                    name: "lili",
+                    age: 30,
+                    weight: "50kg"
+                },
+                str: "qwert",
+            }
+        })
+    </script>
+
+    <div id="root1">
+        <button @click.once="add"> users.unshift()</button>
+        <ul>
+            key的作用就是节点的标识，发生问题了
+            <li v-for="(user,index) in users" :key="index">{{index}}:user:{{user.name}} - age:{{user.age}} <input
+                    type="text"></li>
+        </ul>
+        <ul>
+            user.id的作用就是节点的标识，没问题了
+            <li v-for="(user,index) in users" :key="user.id">{{index}}:user:{{user.name}} - age:{{user.age}} <input
+                    type="text"></li>
+        </ul>
+        <p style="color: red;">原因慢慢来，先说，如果在v-for中不写:key这个属性，vue会自动用index的值作为key，所以不写的
+            情况和 :key="index" 是等效的
+            如果数据的插入不是顺序插入，这样原来的结构会被破坏，那么在虚拟dom的diff对比中，如果在key的index的情况下
+            先对比key是否存在，如果不存在生成新的真实dom，如果存在，那么对比里面的节点，当对比input节点时，因为节点一样，所以复用了真实dom的input节点，所以input里的内容就错位了，
+            但是其他唯一标识符作key时，就可能没这个问题了
+            反正原理很简单啦，明白复用，diff就没什么了
+        </p>
+    </div>
+    <script>
+        new Vue({
+            el: "#root1",
+            data: {
+                users: [
+                    { id: 1, name: "111", age: 19 },
+                    { id: 2, name: "222", age: 18 },
+                    { id: 3, name: "333", age: 20 }
+                ],
+            },
+            methods: {
+                add() {
+                    const user = { id: 4, name: "444", age: 20 }
+                    this.users.unshift(user);
+                }
+            },
+        })
+    </script>
+
+    <div id="root2">
+        <button @click.once="add"> users.unshift()</button>
+        列表过滤
+        <input type="text" placeholder="input name..." v-model="name">
+        <ul>
+            watch 实现 //这个没有监听 users的变化
+            <li v-for="(user,index) in filUsers" :key="user.id">{{index}}:user:{{user.name}} - age:{{user.age}} <input
+                    type="text"></li>
+        </ul>
+        <ul>
+            computed 实现 当users变化时，也没有问题
+            <li v-for="(user,index) in comFilUsers" :key="user.id">{{index}}:user:{{user.name}} - age:{{user.age}}
+                <input type="text">
+            </li>
+        </ul>
+
+        <ul>
+            <button @click="orderBy='asc'">age asc</button>
+            <button @click="orderBy='desc'">age desc </button>
+            <button @click="orderBy=null">original</button>
+            排序
+            <li v-for="(user,index) in comFilUsers" :key="user.id">{{index}}:user:{{user.name}} - age:{{user.age}}
+                <input type="text">
+            </li>
+        </ul>
+
+    </div>
+    <script>
+        new Vue({
+            el: "#root2",
+            data: {
+                users: [
+                    { id: 1, name: "133", age: 19, gender: "m" },
+                    { id: 2, name: "222", age: 18, gender: "m" },
+                    { id: 3, name: "334", age: 16, gender: "f" },
+                    { id: 5, name: "233", age: 25, gender: "f" }
+                ],
+                filUsers: [],
+                name: "",
+                orderBy: null,
+            },
+            methods: {
+                add() {
+                    const user = { id: 4, name: "444", age: 20, gender: "f" }
+                    // this.users.unshift(user);//OK
+                    // this.users.push(user);//OK
+                    // this.users[0].name = "test"//OK
+                    this.users[0] = { id: 4, name: "444", age: 20, gender: "f" }//完蛋了vue监测不到
+                }
+            },
+            computed: {
+                comFilUsers: {
+                    get() {
+                        return this.users.filter((user) => {
+                            return user.name.indexOf(this.name) !== -1
+                        }).sort((a, b) => {
+                            if (!this.orderBy) {
+                                return 1;
+                            }
+                            if (this.orderBy === "asc") {
+                                return a.age - b.age
+                            }
+                            return b.age - a.age
+                        })
+                    }
+                }
+            },
+            watch: {
+                name: {
+                    immediate: true,
+                    handler(n, o) {
+                        //字符串是包含 空""串的 索引也是0，有点无聊
+                        this.filUsers = this.users.filter((user) => {
+                            return user.name.indexOf(n) !== -1
+                        })
+
+
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

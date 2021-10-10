@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <style>
+        .base {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+        }
+
+        .a {
+            background-color: red;
+        }
+
+        .b {
+            background-color: green;
+        }
+
+        .c {
+            background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(29, 253, 146, 0.7310633726146709) 28%, rgba(97, 229, 122, 1) 50%, rgba(252, 176, 69, 1) 100%);
+        }
+
+        .dd {
+            font-size: 50px;
+        }
+
+        .ee {
+            border-style: dotted;
+            border-width: 5px;
+
+        }
+
+        .ff {
+            border-radius: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    class 固定不变的类， :class 写被vue控制变动的类
+    <div id="root">
+        字符串写法，适用于，样式的类用不确定，需要动态指定
+        <div class="base" :class="css" @click="changeStyle">{{text}}</div>
+        <hr>
+        数组写法，适用于，要绑定的样式个数不确定，名字也不确定
+        <div class="base" :class="cssArr" @click="changeStyle1">{{text}}</div>
+        <hr>
+        对象写法，适用于，要绑定的样式个数确定，名字确定，但是要动态决定用不用
+        <div class="base" :class="cssObj" @click="changeStyle2">{{text}}</div>
+
+        <hr>
+        内联写法,对象，小驼峰
+        <div class="base" :style="{fontSize:size+'px',backgroundColor:color}">{{text}}</div>
+        <div class="base" :style="styleObj">{{text}}</div>
+        <hr>
+        内联写法,数组
+        <div class="base" :style="[styleObj,styleObj1]">{{text}}</div>
+        <div class="base" :style="styleArr">{{text}}</div>
+    </div>
+    <script>
+        new Vue({
+            el: "#root",
+            data() {
+                return {
+                    text: "123456",
+                    css: "a",
+                    cssArr: [["dd", "ee"], "ff"],
+                    cssObj: {
+                        dd: false,
+                        ee: true
+                    },
+                    size: 60,
+                    color: "red",
+                    styleObj: {
+                        fontSize: "40px",
+                        backgroundColor: "green"
+                    },
+                    styleObj1: {
+                        borderWidth: "30px"
+                    },
+                    styleArr: [
+                        {
+                            fontSize: "40px",
+                            backgroundColor: "blue"
+                        },
+                        {
+                            borderWidth: "10px"
+                        }
+                    ]
+                }
+            },
+            methods: {
+                changeStyle() {
+                    let css = ["a", "b", "c"]
+                    this.css = css[Math.floor(Math.random() * 3)]
+                },
+                changeStyle1() {
+
+                },
+                changeStyle2() {
+
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

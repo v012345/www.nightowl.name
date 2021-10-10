@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 vue</title>
+    <script src="../js/vue.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- vue 容器 -->
+    <div id="root">
+        <!-- vue 模板  {{}}中是js表达式啊! {{name.toUpperCase()}} {{1+1}} {{Date.now()}} 之类 变量基本上是和vue实例中data同步的-->
+        <h1>hi,{{name}}</h1>
+    </div>
+    <script>
+        Vue.config.productionTip = false;
+        const v = new Vue({//配置对象
+            el: "#root", //el:document.getElementById("root") 也可用 .root 类选择器, 但是请注意, vue实例和容器只能一一对应,不存在一对多的关系
+            data: {//写组件的时候，可能要写成函数
+                name: "vue"
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/day.js"></script>
+</head>
+
+<body>
+    <div id="root">
+
+        computed : {{computedTime}} <br>
+        methods : {{methodsTime()}} <br>
+        过滤器
+        filter : {{time | filterTime }} <br>
+        filter传参 : {{time | timeFormater("YYYY-MM-DD") }}<br>
+        类似unix中的管道操作啦<br>
+        filter传参 : {{time | timeFormater | test | test2 }} <br>
+
+        过滤还可也和 v-bind 配合使用
+        <div :x="x">123</div>
+        <div :x="x | test2">123</div>
+        <div :x="x.slice(0,5)">123</div>
+    </div>
+    <script> 
+        let time = Date.now();
+        //全部过滤器,写在new实例之前
+        Vue.filter("test2", function (v) { return v.slice(0, 2) });
+        new Vue({
+            el: "#root",
+            data: {
+                time,
+                x: "123456789"
+            },
+            computed: {
+                computedTime() {
+                    return dayjs(this.time).format("YYYY-MM-DD HH:mm:ss")
+                }
+            },
+            methods: {
+                methodsTime() {
+                    return dayjs(this.time).format("YYYY-MM-DD HH:mm:ss")
+                }
+            },
+            //局部过滤器
+            filters: {
+                filterTime(v) { return dayjs(v).format("YYYY-MM-DD HH:mm:ss") },
+                timeFormater(v, f = "YYYY-MM-DD HH:mm:ss") { return dayjs(v).format(f) },
+                test(v) {
+                    return v.slice(0, 4)
+                }
+            },
+
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        Vue 按键别名
+        enter
+        delete
+        esc
+        space
+        tab @keydown.tab="f1"
+        up
+        down
+        left
+        right
+        全名情况下 console.log(e.key) 看全名
+        使用 kebab-case 命名 @keyup.caps-lock="f1"
+
+        系统修饰键 ctrl , alt , shift , meta
+        四个键，配合 keydonwn 正常使用
+        配合keyup 使用组合键
+
+        配合按键码也可以 console.log(e.keyCode)
+        @keyup.13="f1"
+
+        自定义
+        Vue.config.keyCodes.abcd = 13
+        @keyup.abcd = "f1"
+        <input type="text" placeholder="keyup" @keyup.enter="f1">
+
+    </div>
+    <script>
+        const vm = new Vue({
+            el: "#app",
+            data: {},
+            methods: {
+
+                f1(e) {
+                    // console.log(e.key.toLowerCase())
+                    // if (e.key.toLowerCase() == "enter") 
+                    console.log(e.target.value)
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

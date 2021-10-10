@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    先总结一下
+    vue会监测所有层次的数据
+    对所以对象，包括数组中的对象来说，vue为键名生成setter和getter方法，来实现监测
+    但是对数组来说，vue不能生成setter和getter，但是，vue包装了Array中的对数组操作的几个方法
+    push pop shift nushift sort resever splice 7方法
+    使用这7个方法操作数组，vue可以监听到
+    同时，使用这么方法，vue可以给加入数组的对象生成setter 和getter 方法
+
+    再就是
+    Vue.set() 和 (new Vue({})).$set()的使用了，看看官网就行，简单
+
+    再再主是啊
+    vue 中的_data中的getter和setter 应该是由Observer来生成和实现的
+    vue中有个Observer对象来管理数据的代理与劫持
+    用Object.defindProperty()来实现
+
+
+    <div id="root"><button @click="add">b</button>
+        <button @click="add1">b</button>
+        {{a.b}} {{a.c}} {{a.d}} {{a.e}} {{b}}
+    </div>
+
+    <script>
+        const vm1 = new Vue({
+            el: "#root",
+            data: {
+                a: {},
+                b: [1, 2, 4],
+                users: [
+                    { id: 1, name: "133", age: 19, gender: "m" },
+                    { id: 2, name: "222", age: 18, gender: "m" },
+                    { id: 3, name: "334", age: 16, gender: "f" },
+                    { id: 5, name: "233", age: 25, gender: "f" }
+                ],
+            },
+            methods: {
+                add() {
+                    this.b[0] = 10;
+                    console.log(this.b[0]);
+                },
+                add1() {
+                    this.$set(this.b, 0, 10)
+                }
+            },
+        })
+        // Vue.set(vm1._data, "name", "lili"); //Avoid adding reactive properties to a Vue instance or its root $data at runtime - declare it upfront in the data option
+
+        Vue.set(vm1._data.a, "b", "b");//两种写法
+        vm1.$set(vm1._data.a, "c", "c")
+
+        Vue.set(vm1.a, "d", "d");//两种写法
+        vm1.$set(vm1.a, "e", "e")
+
+
+    </script>
+
+    <script>
+        let number = 1;
+        let data1 = {
+
+        };
+        Object.defineProperty(data1, "a", {
+            get: function () {
+                return number
+            },
+            set: function (n) {
+                console.log(`改成${n}了`)
+                number = n
+            }
+        })
+
+        //模拟一个 observer
+        let data = {
+            name: "123"
+        }
+        let obs = new Observer(data);
+        let vm = {};
+        vm._data = data = obs;
+        console.log(vm._data === data);
+
+        function Observer(obj) {
+            const keys = Object.keys(obj)
+            keys.forEach((k) => {
+                Object.defineProperty(this, k, {
+                    get() {
+                        return obj[k]
+                    },
+                    set(n) {
+                        obj[k] = n
+                    }
+                })
+            })
+        }
+        //vue 监测对象改变
+        //vue 比这个高级，多层对象，vue会递归的设置上setter和getter
+    </script>
+</body>
+
+</html>

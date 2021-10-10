@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 vue</title>
+    <script src="../js/vue.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="app">
+        {{name}}
+    </div>
+    <script>
+        let data = {
+            name: "123"
+        }
+        const vm = new Vue({
+            el: "#app",
+            data
+        })
+        console.log(vm._data === data) //true
+        console.log(vm.name)
+        //vm.name 对 vm._data.name 进行了数据代理
+        //而 vm._data 还是单单是copy data 还作了数据劫持，不完成修改data中的数组，view也跟着变化
+    </script>
+</body>
+
+</html>
